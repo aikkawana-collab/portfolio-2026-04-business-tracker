@@ -1,0 +1,276 @@
+{
+  "timestamp": "2026-04-25T01:35:26.940Z",
+  "rulesVersion": "1.1.0",
+  "rulesHash": "2fcc5cc8355319a68ba643b77dadaf2a02ca8df0e090b26ac0a4a9084d76c7db",
+  "rootPath": "/tmp/portfolio-build-2026-04-unitee-20260425T013525Z",
+  "totalFiles": 24,
+  "processedFiles": 24,
+  "skippedFiles": [],
+  "replacements": [
+    {
+      "file": "DEPLOYMENT.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-yotei-daichou",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-business-tracker",
+          "count": 3
+        },
+        {
+          "ruleId": "gas-script-id",
+          "count": 3
+        },
+        {
+          "ruleId": "gas-deployment-id",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "file": "PROJECT_NOTES.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-yotei-daichou",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-business-tracker",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-bare",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-lowercase",
+          "count": 6
+        },
+        {
+          "ruleId": "email-generic",
+          "count": 9
+        },
+        {
+          "ruleId": "gas-script-id",
+          "count": 3
+        },
+        {
+          "ruleId": "gas-deployment-id",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "file": "README.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-reservation",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/REQUIREMENTS.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-reservation",
+          "count": 1
+        },
+        {
+          "ruleId": "email-generic",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/REQUIREMENTS.v2.1.archived.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 2
+        },
+        {
+          "ruleId": "email-generic",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/REQUIREMENTS.v3.3.2.archived.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-reservation",
+          "count": 1
+        },
+        {
+          "ruleId": "email-generic",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/_meta.json",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-reservation",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/adr.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/design.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 5
+        },
+        {
+          "ruleId": "business-name-unitee-pages",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-bare",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-lowercase",
+          "count": 7
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/guardrails.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/runbook.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-pages",
+          "count": 6
+        },
+        {
+          "ruleId": "email-generic",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/slos.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/tasks.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-pages",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-reservation",
+          "count": 2
+        },
+        {
+          "ruleId": "email-generic",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "file": "docs/sdd/threats.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "research/runs/2026-04-14__google-calendar-sheets/report.md",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee-reservation",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "file": "src/Code.gs",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee",
+          "count": 1
+        },
+        {
+          "ruleId": "business-name-unitee-yotei-daichou",
+          "count": 2
+        },
+        {
+          "ruleId": "business-name-unitee-bare",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "file": "src/index.html",
+      "replacements": [
+        {
+          "ruleId": "business-name-unitee-bare",
+          "count": 3
+        }
+      ]
+    }
+  ]
+}

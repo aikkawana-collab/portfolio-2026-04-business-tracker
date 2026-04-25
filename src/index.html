@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="本アプリ">
+  <meta name="theme-color" content="#2563eb">
+  <title>本アプリ 業績記録</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --success: #16a34a;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --border: #e5e7eb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-text-size-adjust: 100%;
+    }
+    body { padding: 12px; padding-bottom: 96px; }
+    h1 { font-size: 20px; margin-bottom: 12px; font-weight: 700; }
+    h2 { font-size: 16px; font-weight: 600; }
+
+    button {
+      min-height: 44px;
+      font-size: 16px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: var(--primary);
+      color: white;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    button:active:not(:disabled) { background: var(--primary-dark); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary { background: var(--border); color: var(--text); }
+    button.danger { background: var(--danger); color: white; }
+    button.ghost { background: transparent; color: var(--primary); padding: 8px 12px; min-height: 40px; }
+
+    /* ミニカレンダー */
+    .mini-cal {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .mini-cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+    .mini-cal-title { font-size: 16px; font-weight: 600; flex: 1; }
+    .mini-cal-nav { display: flex; gap: 6px; }
+    .mini-cal-nav button {
+      padding: 6px 10px;
+      min-height: 36px;
+      min-width: 36px;
+      font-size: 14px;
+    }
+    .mini-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .mini-cal-day-header {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 4px 0;
+      font-weight: 600;
+    }
+    .mini-cal-day-header.sun { color: var(--danger); }
+    .mini-cal-day-header.sat { color: var(--primary); }
+    .mini-cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      min-height: 44px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mini-cal-day.other-month { visibility: hidden; }
+    .mini-cal-day.today { background: #dbeafe; font-weight: 700; }
+    .mini-cal-day.selected {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+    .mini-cal-day.has-events::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+    .mini-cal-day.selected.has-events::after { background: white; }
+
+    /* リスト */
+    .list-section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+    .list-header h2 { flex: 1; min-width: 0; }
+    .refresh-btn {
+      background: var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 13px;
+      min-height: 36px;
+      white-space: nowrap;
+    }
+    .card {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:active { background: #e5e7eb; }
+    .card-time {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+    .card-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .warning-badge {
+      display: inline-block;
+      color: var(--warning);
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+    .empty {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 24px 12px;
+      font-size: 14px;
+    }
+
+    /* 下部固定ボタン */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 12px;
+      z-index: 10;
+    }
+    .bottom-bar button {
+      width: 100%;
+      min-height: 48px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .bottom-bar button + button { margin-top: 8px; }
+
+    /* フォーム */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="time"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      font-size: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      color: var(--text);
+      font-family: inherit;
+    }
+    .form-group textarea {
+      min-height: 72px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    .form-group input:disabled,
+    .form-group select:disabled,
+    .form-group textarea:disabled {
+      background: var(--bg);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+    }
+    .checkbox-group label {
+      margin: 0;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .radio-group {
+      display: flex;
+      gap: 20px;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      min-height: 44px;
+      margin: 0;
+    }
+    .radio-group input[type="radio"] {
+      width: 20px;
+      height: 20px;
+    }
+    .form-row { display: flex; gap: 12px; }
+    .form-row > * { flex: 1; min-width: 0; }
+
+    /* トースト */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      max-width: 90%;
+      text-align: center;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.error { background: var(--danger); }
+    .toast.success { background: var(--success); }
+
+    /* ローディング */
+    .loading {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* エラーボックス */
+    .error-box {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--danger);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .hidden { display: none !important; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .back-btn { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- 一覧画面 -->
+  <div id="screen-list" class="screen active">
+    <h1>📅 本アプリ 業績記録</h1>
+
+    <div class="mini-cal">
+      <div class="mini-cal-header">
+        <div class="mini-cal-title" id="cal-title">--月</div>
+        <div class="mini-cal-nav">
+          <button class="secondary" onclick="prevMonth()" aria-label="前の月">◀</button>
+          <button class="secondary" onclick="gotoToday()">今日</button>
+          <button class="secondary" onclick="nextMonth()" aria-label="次の月">▶</button>
+        </div>
+      </div>
+      <div class="mini-cal-grid" id="cal-grid"></div>
+    </div>
+
+    <div class="list-section">
+      <div class="list-header">
+        <h2 id="selected-date-title">日付を選択</h2>
+        <button class="refresh-btn" id="consistency-btn" onclick="runConsistencyCheck()">🔄 整合性</button>
+      </div>
+      <div id="list-container">
+        <div class="empty">読み込み中...</div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <button id="add-btn" onclick="showCreateForm()">＋ 追加</button>
+    </div>
+  </div>
+
+  <!-- 入力フォーム画面 -->
+  <div id="screen-form" class="screen">
+    <button class="ghost back-btn" onclick="showList()">← 戻る</button>
+    <h1 id="form-title">新規登録</h1>
+
+    <div id="form-error" class="error-box hidden"></div>
+
+    <form id="reservation-form" onsubmit="event.preventDefault(); submitForm();">
+      <div class="form-group">
+        <label for="f-date">📅 実施日</label>
+        <input type="date" id="f-date" required>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input type="checkbox" id="f-time-undef">
+          <label for="f-time-undef">⏰ 時間未定として登録</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-start">開始時刻</label>
+          <input type="time" id="f-start">
+        </div>
+        <div class="form-group">
+          <label for="f-duration">所要時間</label>
+          <select id="f-duration">
+            <option value="30min">30 分</option>
+            <option value="1h" selected>1 時間</option>
+            <option value="1.5h">1.5 時間</option>
+            <option value="2h">2 時間</option>
+            <option value="3h">3 時間</option>
+            <option value="half">半日 (4h)</option>
+            <option value="full">終日 (8h)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="f-content">💼 依頼内容</label>
+        <textarea id="f-content" rows="2" maxlength="500" required autocomplete="off"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="f-requester">🏢 依頼元</label>
+        <input type="text" id="f-requester" maxlength="100" required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="f-location">📍 会場場所</label>
+        <input type="text" id="f-location" maxlength="200" required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label>💰 報酬種別</label>
+        <div class="radio-group">
+          <label><input type="radio" name="f-payment" value="有償" checked> 有償</label>
+          <label><input type="radio" name="f-payment" value="無償"> 無償</label>
+        </div>
+      </div>
+    </form>
+
+    <div class="bottom-bar">
+      <button id="submit-btn" onclick="submitForm()">登録する</button>
+      <button id="delete-btn" class="danger hidden" onclick="confirmDelete()">この予定を削除</button>
+    </div>
+  </div>
+
+  <script>
+    var state = {
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      selectedDate: null,
+      records: [],
+      consistencyResults: [],
+      editingId: null
+    };
+
+    function $(id) { return document.getElementById(id); }
+
+    function formatYMD(d) {
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var dd = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + dd;
+    }
+
+    function escapeHtml(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function showToast(msg, type) {
+      var toast = $('toast');
+      toast.textContent = msg;
+      toast.className = 'toast show ' + (type || '');
+      setTimeout(function() { toast.className = 'toast'; }, 3000);
+    }
+
+    function showScreen(name) {
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+      $('screen-' + name).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function showList() { showScreen('list'); loadMonth(); }
+
+    // ========== Mini Calendar ==========
+    function renderCalendar() {
+      $('cal-title').textContent = state.year + '年 ' + state.month + '月';
+
+      var grid = $('cal-grid');
+      grid.innerHTML = '';
+
+      var dayNames = ['月', '火', '水', '木', '金', '土', '日'];
+      for (var i = 0; i < 7; i++) {
+        var el = document.createElement('div');
+        el.className = 'mini-cal-day-header';
+        if (i === 5) el.className += ' sat';
+        if (i === 6) el.className += ' sun';
+        el.textContent = dayNames[i];
+        grid.appendChild(el);
+      }
+
+      var first = new Date(state.year, state.month - 1, 1);
+      var firstDayIdx = first.getDay();
+      firstDayIdx = firstDayIdx === 0 ? 6 : firstDayIdx - 1;
+
+      var daysInMonth = new Date(state.year, state.month, 0).getDate();
+      var today = formatYMD(new Date());
+
+      for (var j = 0; j < firstDayIdx; j++) {
+        var empty = document.createElement('div');
+        empty.className = 'mini-cal-day other-month';
+        grid.appendChild(empty);
+      }
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var cell = document.createElement('div');
+        cell.className = 'mini-cal-day';
+        cell.textContent = d;
+
+        var ymd = state.year + '-' + String(state.month).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        if (ymd === today) cell.classList.add('today');
+        if (ymd === state.selectedDate) cell.classList.add('selected');
+
+        var hasEvents = state.records.some(function(r) {
+          return r.scheduledDate === ymd;
+        });
+        if (hasEvents) cell.classList.add('has-events');
+
+        (function(y) {
+          cell.onclick = function() { selectDate(y); };
+        })(ymd);
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function selectDate(ymd) {
+      state.selectedDate = ymd;
+      renderCalendar();
+      renderList();
+      updateAddButton();
+    }
+
+    function updateAddButton() {
+      if (state.selectedDate) {
+        var parts = state.selectedDate.split('-');
+        $('add-btn').textContent = '＋ ' + parseInt(parts[1]) + '/' + parseInt(parts[2]) + ' に追加';
+        $('add-btn').disabled = false;
+      } else {
+        $('add-btn').textContent = '＋ 日付を選択してください';
+        $('add-btn').disabled = true;
+      }
+    }
+
+    function prevMonth() {
+      if (state.month === 1) { state.year--; state.month = 12; }
+      else state.month--;
+      state.consistencyResults = [];
+      loadMonth();
+    }
+
+    function nextMonth() {
+      if (state.month === 12) { state.year++; state.month = 1; }
+      else state.month++;
+      state.consistencyResults = [];
+      loadMonth();
+    }
+
+    function gotoToday() {
+      var now = new Date();
+      state.year = now.getFullYear();
+      state.month = now.getMonth() + 1;
+      state.selectedDate = formatYMD(now);
+      state.consistencyResults = [];
+      loadMonth();
+    }
+
+    // ========== List ==========
+    function renderList() {
+      var container = $('list-container');
+      var title = $('selected-date-title');
+
+      if (!state.selectedDate) {
+        title.textContent = '日付を選択してください';
+        container.innerHTML = '<div class="empty">日付をタップすると予定が表示されます</div>';
+        return;
+      }
+
+      var parts = state.selectedDate.split('-').map(Number);
+      var y = parts[0], m = parts[1], d = parts[2];
+      var dayName = ['日', '月', '火', '水', '木', '金', '土'][new Date(y, m - 1, d).getDay()];
+      title.textContent = '📅 ' + m + '/' + d + ' (' + dayName + ') の予定';
+
+      var filtered = state.records.filter(function(r) {
+        return r.scheduledDate === state.selectedDate;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty">予定はありません</div>';
+        return;
+      }
+
+      // 時刻でソート（時間未定は最後）
+      filtered.sort(function(a, b) {
+        if (a.timeUndefined && !b.timeUndefined) return 1;
+        if (!a.timeUndefined && b.timeUndefined) return -1;
+        return (a.startTime || '').localeCompare(b.startTime || '');
+      });
+
+      var html = filtered.map(function(r) {
+        var result = state.consistencyResults.find(function(c) { return c.reservationId === r.reservationId; });
+        var warningHtml = '';
+        if (result && result.status !== 'ok' && result.warning) {
+          warningHtml = '<div class="warning-badge">⚠️ ' + escapeHtml(result.warning) + '</div>';
+        }
+        var timeLabel = r.timeUndefined ? '⏰ 時間未定' : (r.startTime + '-' + r.endTime);
+        return '<div class="card" onclick="showEditForm(\'' + escapeHtml(r.reservationId) + '\')">' +
+          warningHtml +
+          '<div class="card-time">' + escapeHtml(timeLabel) + '</div>' +
+          '<div class="card-title">' + escapeHtml(r.requestContent) + ' - ' + escapeHtml(r.requester) + '</div>' +
+          '<div class="card-meta">' +
+            '<span>📍 ' + escapeHtml(r.location) + '</span>' +
+            '<span>💰 ' + escapeHtml(r.paymentType) + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+      container.innerHTML = html;
+    }
+
+    // ========== Load Month ==========
+    function loadMonth() {
+      renderCalendar();
+      $('list-container').innerHTML = '<div class="empty"><span class="loading"></span>読み込み中...</div>';
+      updateAddButton();
+
+      google.script.run
+        .withSuccessHandler(function(records) {
+          state.records = records || [];
+          renderCalendar();
+          renderList();
+        })
+        .withFailureHandler(function(err) {
+          $('list-container').innerHTML = '<div class="empty">読み込みに失敗しました</div>';
+          showToast('読み込みに失敗: ' + err.message, 'error');
+        })
+        .getMonthRecords(state.year, state.month);
+    }
+
+    // ========== Consistency ==========
+    function runConsistencyCheck() {
+      var btn = $('consistency-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading"></span>確認中';
+
+      google.script.run
+        .withSuccessHandler(function(results) {
+          state.consistencyResults = results || [];
+          var warnings = 0;
+          for (var i = 0; i < state.consistencyResults.length; i++) {
+            if (state.consistencyResults[i].status !== 'ok') warnings++;
+          }
+          showToast(warnings === 0 ? '✅ すべて整合しています' : '⚠️ ' + warnings + ' 件の差異を検出', warnings === 0 ? 'success' : 'error');
+          renderList();
+          btn.disabled = false;
+          btn.innerHTML = '🔄 整合性';
+        })
+        .withFailureHandler(function(err) {
+          showToast('チェック失敗: ' + err.message, 'error');
+          btn.disabled = false;
+          btn.innerHTML = '🔄 整合性';
+        })
+        .checkConsistency(state.year, state.month);
+    }
+
+    // ========== Form ==========
+    function showCreateForm() {
+      state.editingId = null;
+      $('form-title').textContent = '新規登録';
+      $('submit-btn').textContent = '登録する';
+      $('submit-btn').disabled = false;
+      $('delete-btn').classList.add('hidden');
+      $('form-error').classList.add('hidden');
+
+      $('f-date').value = state.selectedDate || formatYMD(new Date());
+      $('f-time-undef').checked = false;
+      $('f-start').value = '';
+      $('f-duration').value = '1h';
+      $('f-content').value = '';
+      $('f-requester').value = '';
+      $('f-location').value = '';
+      var radios = document.querySelectorAll('input[name="f-payment"]');
+      for (var i = 0; i < radios.length; i++) radios[i].checked = (radios[i].value === '有償');
+
+      updateTimeFieldsState();
+      showScreen('form');
+    }
+
+    function showEditForm(id) {
+      state.editingId = id;
+      $('form-title').textContent = '編集';
+      $('submit-btn').textContent = '更新する';
+      $('delete-btn').classList.remove('hidden');
+      $('form-error').classList.add('hidden');
+
+      $('submit-btn').disabled = true;
+      $('submit-btn').innerHTML = '<span class="loading"></span>読み込み中';
+      showScreen('form');
+
+      google.script.run
+        .withSuccessHandler(function(r) {
+          if (!r) {
+            showToast('記録が見つかりません', 'error');
+            showList();
+            return;
+          }
+          $('f-date').value = r.scheduledDate || '';
+          $('f-time-undef').checked = Boolean(r.timeUndefined);
+          $('f-start').value = r.startTime || '';
+          if (!r.timeUndefined && r.startTime && r.endTime) {
+            var minutes = diffMinutes(r.startTime, r.endTime);
+            $('f-duration').value = minutesToDurationValue(minutes);
+          } else {
+            $('f-duration').value = '1h';
+          }
+          $('f-content').value = r.requestContent || '';
+          $('f-requester').value = r.requester || '';
+          $('f-location').value = r.location || '';
+          var radios = document.querySelectorAll('input[name="f-payment"]');
+          for (var i = 0; i < radios.length; i++) radios[i].checked = (radios[i].value === r.paymentType);
+
+          updateTimeFieldsState();
+          $('submit-btn').disabled = false;
+          $('submit-btn').textContent = '更新する';
+        })
+        .withFailureHandler(function(err) {
+          showToast('読み込み失敗: ' + err.message, 'error');
+          showList();
+        })
+        .getRecord(id);
+    }
+
+    function diffMinutes(start, end) {
+      var s = start.split(':').map(Number);
+      var e = end.split(':').map(Number);
+      return (e[0] * 60 + e[1]) - (s[0] * 60 + s[1]);
+    }
+
+    function minutesToDurationValue(m) {
+      var map = { 30: '30min', 60: '1h', 90: '1.5h', 120: '2h', 180: '3h', 240: 'half', 480: 'full' };
+      return map[m] || '1h';
+    }
+
+    function updateTimeFieldsState() {
+      var undef = $('f-time-undef').checked;
+      $('f-start').disabled = undef;
+      $('f-duration').disabled = undef;
+      if (undef) $('f-start').value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      $('f-time-undef').addEventListener('change', updateTimeFieldsState);
+    });
+
+    function submitForm() {
+      var paymentRadio = document.querySelector('input[name="f-payment"]:checked');
+      var input = {
+        scheduledDate: $('f-date').value,
+        timeUndefined: $('f-time-undef').checked,
+        startTime: $('f-start').value,
+        duration: $('f-duration').value,
+        requestContent: $('f-content').value.trim(),
+        requester: $('f-requester').value.trim(),
+        location: $('f-location').value.trim(),
+        paymentType: paymentRadio ? paymentRadio.value : '有償'
+      };
+
+      // フロント側の基本チェック
+      var err = [];
+      if (!input.scheduledDate) err.push('実施日を入力してください');
+      if (!input.requestContent) err.push('依頼内容を入力してください');
+      if (!input.requester) err.push('依頼元を入力してください');
+      if (!input.location) err.push('会場場所を入力してください');
+      if (!input.timeUndefined && !input.startTime) err.push('開始時刻を入力してください');
+      if (err.length > 0) { showFormError(err.join(' / ')); return; }
+
+      $('submit-btn').disabled = true;
+      $('submit-btn').innerHTML = '<span class="loading"></span>送信中';
+      $('form-error').classList.add('hidden');
+
+      var successHandler = function(res) {
+        if (!res || !res.success) {
+          handleServerError(res);
+          $('submit-btn').disabled = false;
+          $('submit-btn').textContent = state.editingId ? '更新する' : '登録する';
+          return;
+        }
+        showToast(state.editingId ? '更新しました' : '登録しました', 'success');
+        showList();
+      };
+      var failureHandler = function(err) {
+        showFormError('通信エラー: ' + err.message);
+        $('submit-btn').disabled = false;
+        $('submit-btn').textContent = state.editingId ? '更新する' : '登録する';
+      };
+
+      if (state.editingId) {
+        google.script.run
+          .withSuccessHandler(successHandler)
+          .withFailureHandler(failureHandler)
+          .updateRecord(state.editingId, input);
+      } else {
+        google.script.run
+          .withSuccessHandler(successHandler)
+          .withFailureHandler(failureHandler)
+          .createRecord(input);
+      }
+    }
+
+    function handleServerError(res) {
+      if (!res) { showFormError('サーバから応答がありませんでした'); return; }
+      if (res.messages && res.messages.length > 0) {
+        showFormError(res.messages.join('\n'));
+      } else if (res.error === 'CALENDAR_ORPHAN') {
+        showFormError(res.message + '\n\n⚠️ 手動削除が必要な Calendar イベントID:\n' + res.orphanEventId);
+      } else if (res.error) {
+        showFormError('エラー [' + res.error + ']: ' + (res.message || '詳細不明'));
+      } else {
+        showFormError('不明なエラーが発生しました');
+      }
+    }
+
+    function showFormError(msg) {
+      var box = $('form-error');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    // ========== Delete ==========
+    function confirmDelete() {
+      if (!confirm('この予定を削除しますか？\n\n・Google カレンダーから完全に削除されます\n・スプレッドシートには「キャンセル」として履歴が残ります')) return;
+
+      $('delete-btn').disabled = true;
+      $('delete-btn').innerHTML = '<span class="loading"></span>削除中';
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res && res.success) {
+            showToast('削除しました', 'success');
+            showList();
+          } else {
+            showFormError('削除に失敗しました: ' + (res && res.error ? res.error : ''));
+            $('delete-btn').disabled = false;
+            $('delete-btn').textContent = 'この予定を削除';
+          }
+        })
+        .withFailureHandler(function(err) {
+          showFormError('通信エラー: ' + err.message);
+          $('delete-btn').disabled = false;
+          $('delete-btn').textContent = 'この予定を削除';
+        })
+        .deleteRecord(state.editingId);
+    }
+
+    // ========== Init ==========
+    gotoToday();
+  </script>
+</body>
+</html>

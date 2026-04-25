@@ -1,0 +1,40 @@
+# TAISUN Agent（シンボリックリンク・設定ファイル）
+.claude/
+.claude.backup*/
+.mcp.json
+.env
+.env.local
+.env.*.local
+
+# AI agent working files
+.agent-trace/
+.workflow_state.json
+SESSION_HANDOFF.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node (将来の拡張用)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+.next/
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/

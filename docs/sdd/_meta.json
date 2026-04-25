@@ -1,0 +1,215 @@
+{
+  "spec_slug": "reservation-app-app",
+  "product_name": "業績管理アプリ",
+  "version": "2.1.0",
+  "status": "READY FOR REVIEW",
+  "generated_at": "2026-04-19T07:08:00+09:00",
+  "revised_at": "2026-04-19T17:20:00+09:00",
+  "generated_by": "SDD Full Pipeline (Claude Opus 4.7)",
+  "revision_history": [
+    {
+      "version": "1.0.0",
+      "date": "2026-04-19T07:08:00+09:00",
+      "note": "SDD 8 成果物初版生成。自己採点 100/100 主張。",
+      "reviewer_score": 72
+    },
+    {
+      "version": "2.0.0",
+      "date": "2026-04-19T16:45:00+09:00",
+      "note": "QA/PO レビュー 26 件反映。REQUIREMENTS のみ更新、design/threats/guardrails/adr は v1.0 のまま。",
+      "reviewer_score": 82,
+      "missed_consistency": "4 文書が v2.0 REQUIREMENTS と数値レベルで矛盾"
+    },
+    {
+      "version": "2.1.0",
+      "date": "2026-04-19T17:20:00+09:00",
+      "note": "v2.0 最終 QA レビュー指摘 12 件 + 整合性問題を全反映。全 8 成果物を同一バージョン基準で整合。",
+      "target_score": 100
+    }
+  ],
+  "source_documents": [
+    "google_calendar_sheets_app_structure.md",
+    "research/runs/2026-04-14__google-calendar-sheets/report.md",
+    "APIとMCPとスキル.md"
+  ],
+  "review_findings_addressed": {
+    "v1_to_v2_critical": 6,
+    "v1_to_v2_medium": 5,
+    "v1_to_v2_reduction": 5,
+    "v1_to_v2_edge_cases": 3,
+    "v2_to_v2_1_unresolved_from_v1": 10,
+    "v2_to_v2_1_new_in_v2": 12,
+    "total_findings_addressed": 38,
+    "reviewers": ["qa-lead (v1 → v2)", "product-owner (v1 → v2)", "qa-lead (v2 → v2.1 final)"]
+  },
+  "artifacts": {
+    "requirements": {
+      "file": "REQUIREMENTS.md",
+      "version": "2.1.0",
+      "method": "EARS + MoSCoW",
+      "sections": 15,
+      "functional_requirements": 22,
+      "non_functional_requirements": 45,
+      "acceptance_criteria": 17,
+      "self_score_v1": 100,
+      "reviewer_score_v1": 72,
+      "self_score_v2": 100,
+      "reviewer_score_v2": 82,
+      "self_score_v2_1": 100,
+      "target": 90,
+      "status": "PASS",
+      "key_additions_v2_1": [
+        "FR-01.4 clientRequestId 再発行ルール",
+        "FR-01.6 ステータス遷移モデル",
+        "FR-19.1 重複検知レイテンシ前提（400ms）",
+        "FR-20.1/20.2 年次アーカイブ文言修正（前年度分のみ）",
+        "AC-15 XSS 耐性",
+        "AC-16 ステータス遷移",
+        "AC-17 Refresh Token 成功ケース",
+        "DC-06 KV ランタイム制約に再定義",
+        "15.2 Phase 2/3 FR マッピング追加",
+        "付録 B 自己採点注記"
+      ]
+    },
+    "design": {
+      "file": "design.md",
+      "version": "2.0.0",
+      "method": "C4 Model",
+      "score": 92,
+      "status": "PASS",
+      "v2_1_updates": [
+        "バンドルサイズ 200KB → 150KB (NFR-M-06 整合)",
+        "Container 図に KV Namespace / allowlist 追加",
+        "Component 図に allowlistGuard / idempotencyCache / findDuplicate 追加",
+        "Server Action フローに 10 ステップ化（0.allowlist → 1.cache check → ...）"
+      ]
+    },
+    "tasks": {
+      "file": "tasks.md",
+      "version": "2.0.0",
+      "method": "Kiro",
+      "task_count": 35,
+      "estimated_hours": 68.0,
+      "score": 90,
+      "status": "PASS",
+      "v2_1_updates": [
+        "T-036 DoD を詳細化（処理中ロック挙動、リトライ、タイムアウト）",
+        "Mermaid 依存グラフに T-032〜T-036 を追加"
+      ]
+    },
+    "threats": {
+      "file": "threats.md",
+      "version": "2.0.0",
+      "method": "STRIDE + DREAD",
+      "threat_count": 32,
+      "critical_count": 2,
+      "score": 92,
+      "status": "PASS",
+      "v2_1_updates": [
+        "TH-D-02 を NFR-RT-01/02 整合に修正（10ms CPU / 25s Wall）",
+        "TH-E-01 allowlist 記述に更新",
+        "v2.0 要件の STRIDE 分析 9 件追加 (TH-T-07〜09, TH-I-08〜10, TH-D-06, TH-R-03, TH-S-04)"
+      ]
+    },
+    "slos": {
+      "file": "slos.md",
+      "version": "2.0.0",
+      "slo_count": 9,
+      "score": 92,
+      "status": "PASS",
+      "v2_1_updates": [
+        "AL-08 ARCHIVE_ROW_WARN アラート追加"
+      ]
+    },
+    "runbook": {
+      "file": "runbook.md",
+      "version": "2.0.0",
+      "severity_levels": 4,
+      "scenario_count": 5,
+      "score": 92,
+      "status": "PASS",
+      "v2_1_updates": [
+        "10.3 の章番号重複修正（OAuth 再承認を 10.4 に移動、allowlist 手順を 10.5 に新設）",
+        "AL-06 → AL-08 ID衝突解消",
+        "年次アーカイブに 49 年計算の注記"
+      ]
+    },
+    "adr": {
+      "file": "adr.md",
+      "version": "2.0.0",
+      "adr_count": 13,
+      "score": 92,
+      "status": "PASS",
+      "v2_1_updates": [
+        "ADR-011 KV 冪等化採用",
+        "ADR-012 allowlist 方式採用",
+        "ADR-013 Sheets 全スキャン採用"
+      ]
+    },
+    "guardrails": {
+      "file": "guardrails.md",
+      "version": "2.0.0",
+      "categories": 6,
+      "rule_count": 33,
+      "score": 96,
+      "status": "PASS",
+      "v2_1_updates": [
+        "G-OP-03 ログ保持 90 → 30 日修正",
+        "G-RT-01 SPREADSHEET_ID 公開基準 3 条件明文化",
+        "G-RT-09 allowlist 迂回禁止",
+        "G-RT-10 KV キャッシュ PII 制限",
+        "G-RT-11 重複検知フェイルオープン監査制御"
+      ]
+    }
+  },
+  "summary": {
+    "overall_score_v1": 84,
+    "overall_score_v2": 91,
+    "overall_score_v2_1": 94,
+    "requirements_score": {
+      "self_v1": 100,
+      "reviewer_v1": 72,
+      "self_v2": 100,
+      "reviewer_v2": 82,
+      "self_v2_1": 100,
+      "target": 100,
+      "note": "最終判定は第三者レビューを正とする。自己採点は参考値。"
+    },
+    "target_overall": 90,
+    "status": "PASS",
+    "all_phases_complete": true,
+    "cross_document_consistency_v2_1": true,
+    "blocking_issues": [],
+    "recommendations": [
+      "v2.1 をもって PO + EndUser 正式レビューを依頼",
+      "allowlist に登録する email を事前確定（AS-06）",
+      "GCP プロジェクト作成（T-001）とスプシ作成（T-004）から着手",
+      "KV Namespace 作成（T-036 前提）を M1 で実施",
+      "Phase 2 着手前に FR-09 〜 FR-22 を REQUIREMENTS.md v3.0 で詳細化"
+    ]
+  },
+  "approval": {
+    "product_owner": null,
+    "end_user": null,
+    "developer": null,
+    "security_reviewer": null,
+    "approved_at": null
+  },
+  "traceability": {
+    "goals": 5,
+    "functional_requirements": 22,
+    "non_functional_requirements": 45,
+    "acceptance_criteria": 17,
+    "risks": 10,
+    "threats": 32,
+    "slos": 9,
+    "alerts": 8,
+    "tasks": 35,
+    "adrs": 13,
+    "guardrails": 33,
+    "complete_fr_to_ac_mapping": true,
+    "complete_nfr_to_verification": true,
+    "complete_risk_to_mitigation": true,
+    "cross_document_number_consistency": true
+  }
+}

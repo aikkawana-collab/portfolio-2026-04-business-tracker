@@ -1,0 +1,33 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "script"
+  },
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "globals": {
+    "CalendarApp": "readonly",
+    "SpreadsheetApp": "readonly",
+    "HtmlService": "readonly",
+    "PropertiesService": "readonly",
+    "CacheService": "readonly",
+    "Utilities": "readonly",
+    "Logger": "readonly",
+    "ScriptApp": "readonly",
+    "DriveApp": "readonly",
+    "MailApp": "readonly",
+    "UrlFetchApp": "readonly",
+    "google": "readonly",
+    "console": "readonly"
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { "args": "none" }],
+    "no-undef": "error",
+    "no-console": "off",
+    "semi": ["error", "always"],
+    "no-var": "off",
+    "prefer-const": "off"
+  }
+}
