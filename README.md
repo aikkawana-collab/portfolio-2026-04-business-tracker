@@ -37,10 +37,10 @@ Google Workspace のみで完結する業績管理ツールを開発。
 
 | 技術 | 用途 |
 | --- | --- |
-| Google Apps Script | 実装 |
-| HTML / CSS / Vanilla JS | 実装 |
-| Google Sheets | 実装 |
-| Google Calendar | 実装 |
+| Google Apps Script | サーバーレスAPI層・トリガー駆動の双方向同期処理 |
+| HTML / CSS / Vanilla JS | スマホ最適化フロントエンドUI（外部ライブラリゼロでミニカレンダー自作） |
+| Google Sheets | 業績データのデータストア・集計ダッシュボード基盤 |
+| Google Calendar | 予定との双方向同期（記録登録時に自動連携） |
 
 
 
