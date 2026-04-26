@@ -6,7 +6,7 @@
 |------|------|------|
 | GitHub リポジトリ作成 | ✅ | [business-tracker](https://github.com/aikkawana-collab/business-tracker) |
 | コードコミット・プッシュ | ✅ | main ブランチに最新 |
-| Apps Script プロジェクト作成 | ✅ | Script ID: `<script-id>qd1OhTBWVYuB9` |
+| Apps Script プロジェクト作成 | ✅ | Script ID: `<script-id>` |
 | コード push（Code.gs / index.html / appsscript.json） | ✅ | 3 ファイル |
 | Web App デプロイ（自分のみ実行可） | ✅ | `@2` version |
 | Issue 管理（19 件起票・15 件クローズ） | ✅ | T-01〜T-18 クローズ済 |
@@ -17,7 +17,7 @@
 
 ### Apps Script エディタ
 ```
-https://script.google.com/d/<script-id>qd1OhTBWVYuB9/edit
+https://script.google.com/d/<script-id>/edit
 ```
 
 ### Web App URL（スマホからアクセス）
@@ -36,7 +36,7 @@ https://github.com/aikkawana-collab/business-tracker
 
 ### Step 1: 初回セットアップ（Apps Script エディタで 1 クリック実行）
 
-1. [Apps Script エディタ](https://script.google.com/d/<script-id>qd1OhTBWVYuB9/edit) を開く
+1. [Apps Script エディタ](https://script.google.com/d/<script-id>/edit) を開く
 2. 左の関数選択ドロップダウンで **`setupInitialData`** を選択
 3. 「実行」ボタンをクリック
 4. 初回は OAuth 同意画面が表示される → 許可
@@ -152,7 +152,7 @@ Step 2 のあと、以下の 16 項目を試してください:
 ローカルでコード修正後:
 
 ```bash
-cd "/Users/kawanakenta/Cursol Project/業績管理アプリ"
+cd path/to/repo
 ./node_modules/.bin/clasp push --force
 ./node_modules/.bin/clasp deploy --description "vX.X description"
 ```
